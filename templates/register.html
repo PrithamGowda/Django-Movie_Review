@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2 style="color: #FF0000; text-align: center;">Register</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary" style="background-color: #FF0000; width: 100%;">Register</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}" style="color: #FF0000;">Login here</a></p>
+</div>
+{% endblock %}

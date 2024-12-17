@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href="{% static 'css/style1.css' %}" rel="stylesheet">
+<!-- Add Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<!-- Search and Filter Section -->
+<div class="container my-4">
+    <form method="get" action="{% url 'home' %}" class="d-flex gap-2 align-items-center">
+        <!-- Search Bar -->
+        <div class="input-group" style="max-width: 400px;">
+            <span class="input-group-text" style="background-color: #FF0000; color: white; border: none;">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" name="q" class="form-control" placeholder="Search for movies..." value="{{ request.GET.q|default:'' }}" style="border: 1px solid #FF0000;">
+        </div>
+
+        <!-- Genre Dropdown -->
+        <select name="genre" class="form-select" style="max-width: 200px; border: 1px solid #FF0000;">
+            <option value="">All Genres</option>
+            {% for genre in genres %}
+                <option value="{{ genre.id }}" {% if genre.id|stringformat:"s" == request.GET.genre %}selected{% endif %}>
+                    {{ genre.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-danger">Filter</button>
+    </form>
+</div>
+
+<!-- Movie Cards -->
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for item in items %}
+        <div class="col">
+            <div class="card h-100" style="background: #2c2c2c; border: none; color: white;">
+                <div class="image-container">
+                    <img src="{% if item.cover_image %}{{ item.cover_image.url }}{% else %}/static/images/placeholder.jpg{% endif %}" 
+                         class="card-img-top hover-image" alt="{{ item.title }}">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #FF0000; font-size: 1.25rem; font-weight: bold;">{{ item.title }}</h5>
+                    <p class="card-text" style="font-size: 0.9rem;">
+                        <strong>Genres:</strong> {{ item.genre.name }} <br> 
+                        <strong>IMDB:</strong> {{ item.average_rating }}
+                    </p>
+                    <a href="{% url 'item_detail' item.pk %}" class="btn btn-primary w-100" style="background-color: #FF0000; border: none;">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
